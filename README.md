@@ -1,1 +1,1 @@
-# Experimental tools for designing/analysing block ciphers
+# Tools for designing/analysing block ciphers
