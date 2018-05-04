@@ -61,7 +61,7 @@ int main(void)
 	struct diffusion s;
 	unsigned int sum;
 
-	s.size = 16;
+	s.size = 32;
 	s.f = &g_diff;
 	
 	for (i = 0; i < ROTATIONS; i++) rot[i] = 1;

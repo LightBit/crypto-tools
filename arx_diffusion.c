@@ -57,7 +57,7 @@ static unsigned int diffuse(struct diffusion *s, const void *x, unsigned int *bi
 		}
 	}
 
-	return -1;
+	return MAX_ROUNDS;
 }
 
 static void bits_stat
@@ -143,6 +143,7 @@ void diffusion(struct diffusion *s)
 	
 	s->worst_sum = 0;
 	s->avg_sum = 0;
+
 	for (i = 0; i < s->rounds; i++)
 	{
 		s->worst_sum += s->worst[i];
