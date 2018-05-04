@@ -14,15 +14,17 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "prng.h"
 
-void perm_init(unsigned int *p, unsigned int len)
-{
-	unsigned int i;
-	
-	for (i = 0; i < len; i++) p[i] = i;
-}
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L || \
+	(defined(__cplusplus) && __cplusplus < 201103L)
+
+#define LOG2(X) (log(X) / log(2))
+#else
+#define LOG2(X) log2(X)
+#endif
 
 void perm_init_even(unsigned int *p, unsigned int len)
 {
@@ -193,7 +195,6 @@ void print_permutation(const unsigned int *p, unsigned int words)
 }
 
 #define WORDS 8
-#define REPEATS 3
 
 int main(void)
 {
@@ -202,7 +203,11 @@ int main(void)
 	unsigned int odd[WORDS / 2];
 	unsigned int i;
 	unsigned int sum;
-	unsigned int max_sum = 0;
+	unsigned int max_sum = WORDS * WORDS;
+	unsigned int rounds = LOG2(WORDS);
+
+	printf("Words: %u\n", WORDS);
+	printf("Rounds: %u\n", rounds);
 
 #ifdef RANDOM
 
@@ -222,23 +227,21 @@ int main(void)
 			else p[i] = even[i >> 1];
 		}
 
-		if (!repeats(p, WORDS, REPEATS)) continue;
+		if (!repeats(p, WORDS, rounds)) continue;
 
-		sum = diffusion_all(p, WORDS, REPEATS);
+		sum = diffusion_all(p, WORDS, rounds);
 
 		if (sum >= max_sum)
 		{
 			max_sum = sum;
 
-			for (i = 0; i < WORDS; i++)
+			for (i = 0; i < WORDS; i += 2)
 			{
-				printf("%u, ", p[i]);
+				printf("(%u, %u) ", p[i], p[i + 1]);
 			}
 			putchar('\n');
 
 			//print_permutation(p, WORDS);
-
-			printf("%u / %u\n\n", sum, WORDS * WORDS);
 		}
 	}
 
@@ -256,23 +259,21 @@ int main(void)
 				else p[i] = even[i >> 1];
 			}
 
-			if (!repeats(p, WORDS, REPEATS)) continue;
+			if (!repeats(p, WORDS, rounds)) continue;
 
-			sum = diffusion_all(p, WORDS, REPEATS);
+			sum = diffusion_all(p, WORDS, rounds);
 
 			if (sum >= max_sum)
 			{
 				max_sum = sum;
 
-				for (i = 0; i < WORDS; i++)
+				for (i = 0; i < WORDS; i += 2)
 				{
-					printf("%u, ", p[i]);
+					printf("(%u, %u) ", p[i], p[i + 1]);
 				}
 				putchar('\n');
 
 				//print_permutation(p, WORDS);
-
-				printf("%u / %u\n\n", sum, WORDS * WORDS);
 			}
 		}
 		while (permute(even, WORDS / 2));
