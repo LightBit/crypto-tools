@@ -123,7 +123,7 @@ int repeats(const unsigned int *p, unsigned int len, unsigned int r)
 	return -1;
 }
 
-#define MIX(A, B) { if (B) A = 1; if (A) B = 1; }
+#define MIX(A, B) { A |= B; B |= A; }
 
 unsigned int diffusion
 (
@@ -204,7 +204,7 @@ int main(void)
 	unsigned int i;
 	unsigned int sum;
 	unsigned int max_sum = WORDS * WORDS;
-	unsigned int rounds = LOG2(WORDS);
+	unsigned int rounds = ceil(LOG2(WORDS));
 
 	printf("Words: %u\n", WORDS);
 	printf("Rounds: %u\n", rounds);
